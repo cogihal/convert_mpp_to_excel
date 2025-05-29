@@ -1,8 +1,9 @@
 {
-  "font_name"  : "Meiryo UI",
-  "tab_title"  : "modify as you like",
-  "start_date" : "2025/05/01",
-  "end_date"   : "2025/08/31",
+  "path_to_jvm" : "C:\\jdk-17.0.4.1+1\\bin\\server",
+  "font_name"   : "Meiryo UI",
+  "tab_title"   : "modify as you like",
+  "start_date"  : "2025/05/01",
+  "end_date"    : "2025/08/31",
 
   "holidays": [
     "2025/01/01",

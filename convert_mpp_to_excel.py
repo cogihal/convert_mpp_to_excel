@@ -15,6 +15,7 @@ from openpyxl.utils.cell import get_column_letter
 import tab_complete
 
 # global variables
+path_to_jvm = None  # path to Java VM (jvm.dll)
 fontname    = None  # font name
 tab_title   = None  # tab title
 start_gantt = None  # start date of gantt chart
@@ -331,13 +332,20 @@ def enum_tasks(mpp, ws, row):
     import os
 
     # Set 'JAVA_HOME' to the path of jvm.dll (Java VM)
-    os.environ['JAVA_HOME'] = 'C:\\jdk-17.0.4.1+1\\bin\\server'
+    # If "JAVA_HOME" environment variable is not set and the "path_to_jvm" is set in the config.json, is is set as "JAVA_HOME" environment variable.
+    if os.environ.get('JAVA_HOME') is not None and path_to_jvm is not None:
+        os.environ['JAVA_HOME'] = path_to_jvm
 
     import jpype
     import mpxj
 
-    jpype.startJVM()
-    from org.mpxj.reader import UniversalProjectReader
+    try:
+        jpype.startJVM()
+        from org.mpxj.reader import UniversalProjectReader
+    except jpype.JVMNotFoundException:
+        print("Error: Unable to load Java VM. Please set 'path_to_jvm' entry in the config.json or as the 'JAVA_HOME' environment variable to the path of jvm.dll.")
+        exit(1)
+
     project = UniversalProjectReader().read(mpp)
 
     tasks = project.getTasks()
@@ -450,6 +458,7 @@ def load_config_from_json():
         with open(config_file, 'r', encoding='utf-8') as f:
             config = json.load(f)
             try:
+                config_path_to_jvm = config.get('path_to_jvm', None)
                 config_font_name   = config['font_name']
                 config_tab_title   = config['tab_title']
                 config_start_date  = config['start_date']
@@ -463,12 +472,13 @@ def load_config_from_json():
         return False
 
     try:
-        global fontname, tab_title, start_gantt, end_gantt, holidays
+        global path_to_jvm, fontname, tab_title, start_gantt, end_gantt, holidays
+        path_to_jvm  = config_path_to_jvm
         fontname     = config_font_name
         tab_title    = config_tab_title
-        start_gantt = datetime.datetime.strptime(config_start_date, '%Y/%m/%d').date()
-        end_gantt   = datetime.datetime.strptime(config_end_date, '%Y/%m/%d').date()
-        holidays = [datetime.datetime.strptime(date, '%Y/%m/%d').date() for date in config_holidais]
+        start_gantt  = datetime.datetime.strptime(config_start_date, '%Y/%m/%d').date()
+        end_gantt    = datetime.datetime.strptime(config_end_date, '%Y/%m/%d').date()
+        holidays     = [datetime.datetime.strptime(date, '%Y/%m/%d').date() for date in config_holidais]
     except ValueError as e:
         print(f'format error in config.json: {e}')
         return False
