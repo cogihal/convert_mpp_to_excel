@@ -8,7 +8,7 @@ This is a Python script that converts a Microsoft Project .mpp file into an Exce
 
 ```
 {
-  "path_to_jvm" : the path of jvm.dll (Java VM)
+  "path_to_jvm" : full path file name of jvm.dll (Java VM) : ex. "C:\\jdk\\bin\\server\\jvm.dll"
   "font_name"   : font name that you want to use
   "tab_title"   : tab title string
   "start_date"  : start date for gantt chart in format YYYY/MM/DD

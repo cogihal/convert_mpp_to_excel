@@ -331,16 +331,24 @@ def enum_tasks(mpp, ws, row):
 
     import os
 
-    # Set 'JAVA_HOME' to the path of jvm.dll (Java VM)
-    # If "JAVA_HOME" environment variable is not set and the "path_to_jvm" is set in the config.json, is is set as "JAVA_HOME" environment variable.
-    if os.environ.get('JAVA_HOME') is not None and path_to_jvm is not None:
-        os.environ['JAVA_HOME'] = path_to_jvm
+    jvm = path_to_jvm
+    # Check if the "JAVA_HOME" environment variable is NOT set.
+    if os.environ.get('JAVA_HOME') is None:
+        # If the "path_to_jvm" is set and it is a valid.
+        if path_to_jvm is None or not os.path.exists(path_to_jvm):
+            # Unable to continue.
+            print("Error: 'path_to_jvm' entry in the config.json is not set or invalid.")
+            print("Please set 'path_to_jvm' entry in the config.json or as the 'JAVA_HOME' environment variable to the path of jvm.dll.")
+            exit(1)
+    else:
+        # "JAVA_HOME" is set, so use it.
+        jvm = None
 
     import jpype
     import mpxj
 
     try:
-        jpype.startJVM()
+        jpype.startJVM(jvmpath=jvm)
         from org.mpxj.reader import UniversalProjectReader
     except jpype.JVMNotFoundException:
         print("Error: Unable to load Java VM. Please set 'path_to_jvm' entry in the config.json or as the 'JAVA_HOME' environment variable to the path of jvm.dll.")

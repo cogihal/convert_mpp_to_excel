@@ -1,5 +1,5 @@
 {
-  "path_to_jvm" : "C:\\jdk-17.0.4.1+1\\bin\\server",
+  "path_to_jvm" : "C:\\jdk-17.0.4.1+1\\bin\\server\\jvm.dll",
   "font_name"   : "Meiryo UI",
   "tab_title"   : "modify as you like",
   "start_date"  : "2025/05/01",
