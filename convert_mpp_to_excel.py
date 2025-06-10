@@ -252,7 +252,7 @@ def set_conditional_format(ws, min_row, max_row):
             c += 1
         r += 1
 
-def write_task(ws, row, indent, taskid, taskname, resourcenames, start, finish, patient=False):
+def write_task(ws, row, indent, taskid, taskname, resourcenames, start, finish, percentage, patient=False):
     """
     Write task information to the worksheet.
 
@@ -265,6 +265,7 @@ def write_task(ws, row, indent, taskid, taskname, resourcenames, start, finish, 
         resourcenames (list): list of assigned resource names
         start (str): start date of the task
         finish (str): finish date of the task
+        percentage (int): complete percentage of the task (0-100)
         patient (bool): it is a patient task or not (default: False)
     """
 
@@ -307,7 +308,7 @@ def write_task(ws, row, indent, taskid, taskname, resourcenames, start, finish, 
     ws.cell(row, 6).alignment = Alignment(horizontal='center', vertical='center')
 
     ws.cell(row, 7).number_format = openpyxl.styles.numbers.FORMAT_PERCENTAGE
-    ws.cell(row, 7).value = 0 # No 'done_ratio' information in mpp file
+    ws.cell(row, 7).value = percentage/100.
     ws.cell(row, 7).font = Font(name=fontname)
     ws.cell(row, 7).alignment = Alignment(horizontal='center', vertical='center')
 
@@ -376,15 +377,25 @@ def enum_tasks(mpp, ws, row):
                     resource_name = str(resource.getName())
                     if resource_name is not None:
                         resource_names.append(resource_name)
-            # Display resource names in parentheses
-            resource_str = f" {', '.join(resource_names)}" if resource_names else ''
+
+            # Complete percentage
+            complete = task.getPercentageComplete() # 0-100
+            if complete is None:
+                percentage = 0
+            else:
+                percentage = int(complete)
+                if percentage < 0:      percentage = 0
+                elif percentage > 100:  percentage = 100
+
+            # Display assigned resource names
+            resource_str = f"{', '.join(resource_names)}" if resource_names else ''
             if child_tasks:
                 # If there are child tasks, do not display dates
-                write_task(ws, row, indent, id, name, resource_str, start='', finish='', patient=True)
+                write_task(ws, row, indent, id, name, resource_str, start='', finish='', percentage=percentage, patient=True)
             else:
                 start  = str(task.getStart())
                 finish = str(task.getFinish())
-                write_task(ws, row, indent, id, name, resource_str, start[:10], finish[:10], patient=False)
+                write_task(ws, row, indent, id, name, resource_str, start[:10], finish[:10], percentage=percentage, patient=False)
             row += 1
 
         # Recursively display child tasks
