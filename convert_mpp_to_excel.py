@@ -3,8 +3,8 @@
 #
 
 import datetime
-import json
 import os
+import tomllib
 
 import openpyxl
 from openpyxl.formatting.rule import DataBarRule, FormulaRule
@@ -338,8 +338,8 @@ def enum_tasks(mpp, ws, row):
         # If the "path_to_jvm" is set and it is a valid.
         if path_to_jvm is None or not os.path.exists(path_to_jvm):
             # Unable to continue.
-            print("Error: 'path_to_jvm' entry in the config.json is not set or invalid.")
-            print("Please set 'path_to_jvm' entry in the config.json or as the 'JAVA_HOME' environment variable to the path of jvm.dll.")
+            print("Error: 'path_to_jvm' entry in the config.toml is not set or invalid.")
+            print("Please set 'path_to_jvm' entry in the config.toml or as the 'JAVA_HOME' environment variable to the path of jvm.dll.")
             exit(1)
     else:
         # "JAVA_HOME" is set, so use it.
@@ -352,7 +352,7 @@ def enum_tasks(mpp, ws, row):
         jpype.startJVM(jvmpath=jvm)
         from org.mpxj.reader import UniversalProjectReader
     except jpype.JVMNotFoundException:
-        print("Error: Unable to load Java VM. Please set 'path_to_jvm' entry in the config.json or as the 'JAVA_HOME' environment variable to the path of jvm.dll.")
+        print("Error: Unable to load Java VM. Please set 'path_to_jvm' entry in the config.toml or as the 'JAVA_HOME' environment variable to the path of jvm.dll.")
         exit(1)
 
     project = UniversalProjectReader().read(mpp)
@@ -467,15 +467,15 @@ def main(mpp):
             if yn == 'N':
                 break 
 
-def load_config_from_json():
+def load_config_from_toml():
     """
-    Load configuration from 'config.json'.
+    Load configuration from 'config.toml'.
     """
 
-    config_file = 'config.json' # constant file name
+    config_file = 'config.toml' # constant file name
     if os.path.exists(config_file):
-        with open(config_file, 'r', encoding='utf-8') as f:
-            config = json.load(f)
+        with open(config_file, 'rb') as f:
+            config = tomllib.load(f)
             try:
                 config_path_to_jvm = config.get('path_to_jvm', None)
                 config_font_name   = config['font_name']
@@ -484,7 +484,7 @@ def load_config_from_json():
                 config_end_date    = config['end_date']
                 config_holidais    = config['holidays']
             except KeyError as e:
-                print(f'format error in config.json: {e}')
+                print(f'format error in config.toml: {e}')
                 return False
     else:
         print(f"config file '{config_file}' not found.")
@@ -499,13 +499,13 @@ def load_config_from_json():
         end_gantt    = datetime.datetime.strptime(config_end_date, '%Y/%m/%d').date()
         holidays     = [datetime.datetime.strptime(date, '%Y/%m/%d').date() for date in config_holidais]
     except ValueError as e:
-        print(f'format error in config.json: {e}')
+        print(f'format error in config.toml: {e}')
         return False
 
     return True
 
 if __name__ == '__main__':
-    if load_config_from_json():
+    if load_config_from_toml():
         print(f"Input Microsoft project .mpp file name : ", end='')
         mpp = input()
         if not os.path.exists(mpp):

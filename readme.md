@@ -4,20 +4,18 @@
 
 This is a Python script that converts a Microsoft Project .mpp file into an Excel Gantt chart.
 
-## Description of config.json
+## Description of config.toml
 
 ```
-{
-  "path_to_jvm" : full path file name of jvm.dll (Java VM) : ex. "C:\\jdk\\bin\\server\\jvm.dll"
-  "font_name"   : font name that you want to use
-  "tab_title"   : tab title string
-  "start_date"  : start date for gantt chart in format YYYY/MM/DD
-  "end_date"    : end date for gantt chart in format YYYY/MM/DD
+path_to_jvm = full path file name of jvm.dll (Java VM) : ex. "C:\\jdk\\bin\\server\\jvm.dll"
+font_name   = font name that you want to use : ex. "Meiryo UI"
+tab_title   = tab title string : ex. "Project Blue"
+start_date  = start date for gantt chart in format "YYYY/MM/DD"
+end_date    = end date for gantt chart in format "YYYY/MM/DD"
 
-  "holidays": [
-    list of holidays in format YYYY/MM/DD
-  ]
-}
+holidays = [
+  list of holidays in format "YYYY/MM/DD", ...
+]
 ```
 
 If the `JAVA_HOME` environment variable has been set already, "path_to_jvm" is not necessary.
