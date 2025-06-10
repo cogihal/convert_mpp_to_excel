@@ -1,0 +1,12 @@
+[project]
+name = "convert-mpp-to-excel"
+version = "1.0.0"
+description = "Convert Microsoft Project .mpp file to Excel Gantt Chart"
+readme = "README.md"
+requires-python = ">=3.13.4"
+dependencies = [
+    "jpype1>=1.5.2",
+    "mpxj>=14.1.0",
+    "openpyxl>=3.1.5",
+    "pyreadline3>=3.5.4",
+]
