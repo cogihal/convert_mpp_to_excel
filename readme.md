@@ -6,7 +6,11 @@ This is a Python script that converts a Microsoft Project .mpp file into an Exce
 
 ## Description of config.toml
 
+First, prepare 'config.toml' by referring to the sample file - 'config_sample_with_JapaneseHolidays.toml'.
+The configuration file name must be 'config.toml'.
+
 ```
+# config.toml
 path_to_jvm = full path file name of jvm.dll (Java VM) : ex. "C:\\jdk\\bin\\server\\jvm.dll"
 font_name   = font name that you want to use : ex. "Meiryo UI"
 tab_title   = tab title string : ex. "Project Blue"
@@ -24,13 +28,13 @@ If the `JAVA_HOME` environment variable is set, "path_to_jvm" will not be used e
 ## Pre-requisites
 
 - Java Vartual Machine (JVM).  
-  mpxj requires JVM to run.
+  Because mpxj requires JVM to run.
 
 ## Developing environments
 
-- Python 3.13.3
+- Python 3.13.4
 - jpype1==1.5.2
-- mpxj==14.0.0
+- mpxj==14.1.0
 - openpyxl==3.1.5
 - pyreadline3==3.5.4
 
