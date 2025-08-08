@@ -445,7 +445,7 @@ def main(mpp):
     set_conditional_format(ws, start_row, end_row)
 
     while True:
-        print(f"Input file name (It doesn't need '.xlsx' extention.) : ", end='')
+        print("Input file name (It doesn't need '.xlsx' extention.) : ", end='')
         f = input()
         # check if file name is empty
         if f == '':
@@ -462,7 +462,7 @@ def main(mpp):
             break
         except:
             print(f"Error : Can't save to '{f}.xlsx")
-            print(f"Do you want to try again? [_/n] : ", end='')
+            print("Do you want to try again? [_/n] : ", end='')
             yn = input().upper()
             if yn == 'N':
                 break 
@@ -506,7 +506,7 @@ def load_config_from_toml():
 
 if __name__ == '__main__':
     if load_config_from_toml():
-        print(f"Input Microsoft project .mpp file name : ", end='')
+        print("Input Microsoft project .mpp file name : ", end='')
         mpp = input()
         if not os.path.exists(mpp):
             print(f"File '{mpp}' not found.")
