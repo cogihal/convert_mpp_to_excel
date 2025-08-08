@@ -460,7 +460,7 @@ def main(mpp):
         try:
             wb.save(f'.\\{f}.xlsx')
             break
-        except:
+        except Exception:
             print(f"Error : Can't save to '{f}.xlsx")
             print("Do you want to try again? [_/n] : ", end='')
             yn = input().upper()
